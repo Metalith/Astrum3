@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Common">
+      <UniqueIdentifier>{59503637-e656-4912-a94b-6783559b5c80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Common">
+      <UniqueIdentifier>{e19eed14-894a-45d9-88ce-224e455b9d3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components">
+      <UniqueIdentifier>{19dc87e2-f492-4722-aa18-40048fe9bdd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Systems">
+      <UniqueIdentifier>{74418d3f-3eef-4fc1-b18d-290bf66fd14e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Systems">
+      <UniqueIdentifier>{031ff923-ac42-4ee5-9853-429d7ba68101}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="engine.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\shader.hpp">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\quaternion_utils.hpp">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="systems\controls.hpp">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="systems\render.hpp">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="systems\system.hpp">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="systems\terrain.hpp">
+      <Filter>Header Files\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="components\component.hpp">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="components\mesh.hpp">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="components\player.hpp">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="components\transform.hpp">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Astrum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="engine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="common\quaternion_utils.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="systems\controls.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="systems\render.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="systems\terrain.cpp">
+      <Filter>Source Files\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="common\shader.cpp">
+      <Filter>Source Files\Common</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
