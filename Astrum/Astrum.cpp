@@ -46,7 +46,7 @@ int main() {
 	int player = e.createEntity();
 	e.addComponent(player, new Player());
 	Transform tmp = Transform();
-	tmp.position = vec3(4, 3, -3);
+	tmp.position = vec3(10, 15, -15);
 	vec3 desiredDir = -tmp.position;
 	vec3 desiredUp = vec3(0.0f, 1.0f, 0.0f); // +Y
 	mat4 View = glm::lookAt(

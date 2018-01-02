@@ -181,6 +181,12 @@
     <ClCompile Include="systems\render.cpp" />
     <ClCompile Include="systems\terrain.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\res\SimpleFragmentShader.frag" />
+    <None Include="..\res\SimpleVertexShader.vert" />
+    <None Include="..\res\Voxel.frag" />
+    <None Include="..\res\Voxel.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

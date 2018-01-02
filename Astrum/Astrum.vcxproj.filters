@@ -28,6 +28,12 @@
     <Filter Include="Header Files\Systems">
       <UniqueIdentifier>{031ff923-ac42-4ee5-9853-429d7ba68101}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Vertex Shaders">
+      <UniqueIdentifier>{1ff2b6f2-cbef-4a49-af8f-f16afcb6b1e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Fragment Shaders">
+      <UniqueIdentifier>{fdd4fc37-6069-4b3b-8adf-76380915807c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -95,5 +101,19 @@
     <ClCompile Include="Astrum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\res\SimpleFragmentShader.frag">
+      <Filter>Resource Files\Fragment Shaders</Filter>
+    </None>
+    <None Include="..\res\Voxel.frag">
+      <Filter>Resource Files\Fragment Shaders</Filter>
+    </None>
+    <None Include="..\res\SimpleVertexShader.vert">
+      <Filter>Resource Files\Vertex Shaders</Filter>
+    </None>
+    <None Include="..\res\Voxel.vert">
+      <Filter>Resource Files\Vertex Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

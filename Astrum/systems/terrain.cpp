@@ -15,7 +15,7 @@ using namespace noise;
 Mesh mesh = Mesh();
 module::Perlin myModule;
 
-const int CHUNK_SIZE = 128;
+const int CHUNK_SIZE = 16;
 TerrainSystem::TerrainSystem() {
     std::cout << "New System :: Terrain!" << std::endl;
 
@@ -29,9 +29,9 @@ TerrainSystem::TerrainSystem() {
 	engine->addComponent(chunk, &mesh);
     
     int i, j, k;
-    for (i = 0; i < CHUNK_SIZE; i++) {
-        for (k = 0; k < CHUNK_SIZE; k++) {
-            for (j = 0; j < CHUNK_SIZE; j++) {
+    for (i = -CHUNK_SIZE; i < CHUNK_SIZE; i++) {
+        for (k = -CHUNK_SIZE; k < CHUNK_SIZE; k++) {
+            for (j = -CHUNK_SIZE; j < CHUNK_SIZE; j++) {
                 // int value = (myModule.GetValue(((double) i) / CHUNK_SIZE, ((double) j) / CHUNK_SIZE, ((double) k) /  CHUNK_SIZE)) * 8.0;
                 // if (value > 0)
                     GenerateCube(i, j, k, &mesh);
@@ -335,57 +335,73 @@ int triTable[256][16] =
 {0, 3, 8, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1}};
 
+/*
+Optimizations:
+	- Precalc SDF Values, crazy slow
+*/
 void TerrainSystem::GenerateCube(int x, int y, int z, Mesh * mesh) {
     int cubeindex = 0;
     glm::vec3 pos(x, y, z); 
-    if (sdf(pos + vec3(-0.5, -0.5, 0.5))) cubeindex |= 1;
-    if (sdf(pos + vec3( 0.5, -0.5, 0.5))) cubeindex |= 2;
-    if (sdf(pos + vec3( 0.5, -0.5, -0.5))) cubeindex |= 4;
-    if (sdf(pos + vec3(-0.5, -0.5, -0.5))) cubeindex |= 8;
-    if (sdf(pos + vec3(-0.5, 0.5, 0.5))) cubeindex |= 16;
-    if (sdf(pos + vec3( 0.5, 0.5, 0.5))) cubeindex |= 32;
-    if (sdf(pos + vec3( 0.5, 0.5, -0.5))) cubeindex |= 64;
-    if (sdf(pos + vec3(-0.5, 0.5, -0.5))) cubeindex |= 128;
+    if (sdf(pos + vec3(-0.5, -0.5,  0.5)) < 0) cubeindex |= 1;
+    if (sdf(pos + vec3( 0.5, -0.5,  0.5)) < 0) cubeindex |= 2;
+    if (sdf(pos + vec3( 0.5, -0.5, -0.5)) < 0) cubeindex |= 4;
+    if (sdf(pos + vec3(-0.5, -0.5, -0.5)) < 0) cubeindex |= 8;
+    if (sdf(pos + vec3(-0.5,  0.5,  0.5)) < 0) cubeindex |= 16;
+    if (sdf(pos + vec3( 0.5,  0.5,  0.5)) < 0) cubeindex |= 32;
+    if (sdf(pos + vec3( 0.5,  0.5, -0.5)) < 0) cubeindex |= 64;
+    if (sdf(pos + vec3(-0.5,  0.5, -0.5)) < 0) cubeindex |= 128;
 
     if (edgeTable[cubeindex] == 0)
       return;
 
     glm::vec3 vertlist[12]; 
 
-    if (edgeTable[cubeindex] & 1)
-        vertlist[0] = pos + vec3(0   , -0.5, 0.5);
-    if (edgeTable[cubeindex] & 2)
-        vertlist[1] = pos + vec3(0.5 , -0.5, 0);
+	if (edgeTable[cubeindex] & 1) //TODO: Look into doing a lambda for this
+		vertlist[0] = interp(pos + vec3(0.5, -0.5, 0.5), pos + vec3(-0.5, -0.5, 0.5));
+	if (edgeTable[cubeindex] & 2)
+		vertlist[1] = interp(pos + vec3(0.5, -0.5, -0.5), pos + vec3(0.5, -0.5, 0.5));
     if (edgeTable[cubeindex] & 4)
-        vertlist[2] = pos + vec3(0   , -0.5, -0.5);
+        vertlist[2] = interp(pos + vec3(0.5, -0.5, -0.5), pos + vec3(-0.5, -0.5, -0.5));
     if (edgeTable[cubeindex] & 8)
-        vertlist[3] = pos + vec3(-0.5, -0.5, 0);
+        vertlist[3] = interp(pos + vec3(-0.5, -0.5, -0.5), pos + vec3(-0.5, -0.5, 0.5));
     if (edgeTable[cubeindex] & 16)
-        vertlist[4] = pos + vec3(0   ,  0.5, 0.5);
+        vertlist[4] = interp(pos + vec3(0.5,  0.5, 0.5), pos + vec3(-0.5, 0.5, 0.5));
     if (edgeTable[cubeindex] & 32)
-        vertlist[5] = pos + vec3(0.5 ,  0.5, 0);
+        vertlist[5] = interp(pos + vec3(0.5, 0.5, -0.5), pos + vec3(0.5, 0.5, 0.5));
     if (edgeTable[cubeindex] & 64)
-        vertlist[6] = pos + vec3(0   ,  0.5, -0.5);
+        vertlist[6] = interp(pos + vec3(0.5, 0.5, -0.5), pos + vec3(-0.5, 0.5, -0.5));
     if (edgeTable[cubeindex] & 128)
-        vertlist[7] = pos + vec3(-0.5 , 0.5  , 0);
+        vertlist[7] = interp(pos + vec3(-0.5, 0.5, -0.5), pos + vec3(-0.5, 0.5, 0.5));
     if (edgeTable[cubeindex] & 256)
-        vertlist[8] = pos + vec3(-0.5 , 0  , 0.5);
+        vertlist[8] = interp(pos + vec3(-0.5, 0.5, 0.5), pos + vec3(-0.5, -0.5, 0.5));
     if (edgeTable[cubeindex] & 512)
-        vertlist[9] = pos + vec3(0.5  , 0  ,   0.5);
+        vertlist[9] = interp(pos + vec3(0.5, 0.5, 0.5), pos + vec3(0.5, -0.5, 0.5));
     if (edgeTable[cubeindex] & 1024)
-        vertlist[10] = pos + vec3(0.5 , 0  , -0.5);
+        vertlist[10] = interp(pos + vec3(0.5, -0.5, -0.5), pos + vec3(0.5, 0.5, -0.5));
     if (edgeTable[cubeindex] & 2048)
-        vertlist[11] = pos + vec3(-0.5, 0  , -0.5);
+        vertlist[11] = interp(pos + vec3(-0.5, -0.5, -0.5), pos + vec3(-0.5, 0.5, -0.5));
 
     /* Create the triangle */
     for (int i=0;triTable[cubeindex][i]!=-1;i++) {
-        mesh->vertices.push_back(vertlist[triTable[cubeindex][i  ]].x);
-        mesh->vertices.push_back(vertlist[triTable[cubeindex][i  ]].y);
-        mesh->vertices.push_back(vertlist[triTable[cubeindex][i  ]].z);
+        mesh->vertices.push_back(vertlist[triTable[cubeindex][i]].x);
+        mesh->vertices.push_back(vertlist[triTable[cubeindex][i]].y);
+        mesh->vertices.push_back(vertlist[triTable[cubeindex][i]].z);
     }
 }
 
-bool TerrainSystem::sdf(glm::vec3 pos) {
-    // return pos.x < 0.5;
-    return myModule.GetValue(pos.x / CHUNK_SIZE, pos.y / CHUNK_SIZE, pos.z / CHUNK_SIZE) > 0;
+float TerrainSystem::sdf(glm::vec3 pos) {
+     //return pos.z < 0.5;
+	return glm::length(pos) - 8;
+    //return myModule.GetValue(pos.x / CHUNK_SIZE, pos.y / CHUNK_SIZE, pos.z / CHUNK_SIZE);
+}
+
+glm::vec3 TerrainSystem::interp(glm::vec3 vert1, glm::vec3 vert2)
+{
+	float val1 = sdf(vert1);
+	float val2 = sdf(vert2);
+	val1 = (val1 + 1) / 2.0f;
+	val2 = (val2 + 1) / 2.0f;
+	float mu = (0.5f - val1) / (val2 - val1);
+	return glm::mix(vert1, vert2, mu);
+	//return glm::mix(vert1, vert2, 0.5);	 // Straight Voxels
 }

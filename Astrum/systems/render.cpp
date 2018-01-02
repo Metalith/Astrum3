@@ -42,7 +42,7 @@ RenderSystem::RenderSystem() {
 	glEnable(GL_DEPTH_TEST);
 	// Accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS);
-	glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	//    glCullFace(GL_FRONT);
 	  //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
 

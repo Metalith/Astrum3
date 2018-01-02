@@ -17,7 +17,7 @@ void main()
     // diffuse 
     vec3 X = dFdx(FragPos);
     vec3 Y = dFdy(FragPos);
-    vec3 norm = normalize(cross(X,Y));
+    vec3 norm = -normalize(cross(X,Y));
     //vec3 norm = normalize(vertexNormal);
     vec3 lightDir = normalize(lightPos - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);

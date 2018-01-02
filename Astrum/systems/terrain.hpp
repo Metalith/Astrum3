@@ -14,7 +14,8 @@ class TerrainSystem: public System {
 
 	private:
 		void GenerateCube(int x, int y, int z, Mesh * mesh);
-		bool sdf(glm::vec3 pos);
+		float sdf(glm::vec3 pos);
+		glm::vec3 interp(glm::vec3 vert1, glm::vec3 vert2);
 };
 
 #endif
