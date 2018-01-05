@@ -6,23 +6,26 @@ in vec3 FragPos;
 
 void main()
 {
-	vec3 objectColor = vec3(0.6, 0.6, 1.0) + (0.1 * abs(vertexNormal));
-	vec3 lightPos = vec3(4, 3, -3);
+	vec3 objectColor = vec3(0.6, 0.6, 1.0);
+	vec3 lightPos = vec3(10, 15, -15);
 	vec3 lightColor = vec3(1, 1, 1);
 
 	// ambient
     float ambientStrength = 0.1;
     vec3 ambient = ambientStrength * lightColor;
   	
-    // diffuse 
-    vec3 X = dFdx(FragPos);
-    vec3 Y = dFdy(FragPos);
-    vec3 norm = -normalize(cross(X,Y));
-    //vec3 norm = normalize(vertexNormal);
+    // diffuse
     vec3 lightDir = normalize(lightPos - FragPos);
-    float diff = max(dot(norm, lightDir), 0.0);
+    float diff = max(dot(vertexNormal, lightDir), 0.0);
     vec3 diffuse = diff * lightColor;
-            
+    
+	// specular
+    //float specularStrength = 0.5;
+    //vec3 viewDir = normalize(viewPos - FragPos);
+    //vec3 reflectDir = reflect(-lightDir, norm);  
+    //float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+    //vec3 specular = specularStrength * spec * lightColor;   
+
     vec3 result = (ambient + diffuse) * objectColor;
     color = vec4(result, 1.0);
 }

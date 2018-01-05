@@ -381,16 +381,37 @@ void TerrainSystem::GenerateCube(int x, int y, int z, Mesh * mesh) {
     if (edgeTable[cubeindex] & 2048)
         vertlist[11] = interp(pos + vec3(-0.5, -0.5, -0.5), pos + vec3(-0.5, 0.5, -0.5));
 
+	glm::vec3 p1, p2, p3, norm;
+
     /* Create the triangle */
     for (int i=0;triTable[cubeindex][i]!=-1;i++) {
         mesh->vertices.push_back(vertlist[triTable[cubeindex][i]].x);
         mesh->vertices.push_back(vertlist[triTable[cubeindex][i]].y);
         mesh->vertices.push_back(vertlist[triTable[cubeindex][i]].z);
+		switch (i % 3)
+		{
+			case 0:
+				p1 = vertlist[triTable[cubeindex][i]];
+				break;
+			case 1:
+				p2 = vertlist[triTable[cubeindex][i]];
+				break;
+			case 2:
+				p3 = vertlist[triTable[cubeindex][i]];
+				norm = -glm::normalize(glm::cross(p2 - p1, p3 - p1));
+				for (int j = 0; j < 3; j++)
+				{
+					mesh->normals.push_back(norm.x);
+					mesh->normals.push_back(norm.y);
+					mesh->normals.push_back(norm.z);
+				}
+				break;
+		}
     }
 }
 
 float TerrainSystem::sdf(glm::vec3 pos) {
-     //return pos.z < 0.5;
+     //return pos.x - 10;
 	return glm::length(pos) - 8;
     //return myModule.GetValue(pos.x / CHUNK_SIZE, pos.y / CHUNK_SIZE, pos.z / CHUNK_SIZE);
 }

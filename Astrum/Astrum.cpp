@@ -1,7 +1,7 @@
 // Astrum.cpp : Defines the entry point for the console application.
 //
 #include "stdafx.h" 
-#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+//#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 // Include standard headers
 #include <string>
 #include <fstream>
@@ -46,7 +46,7 @@ int main() {
 	int player = e.createEntity();
 	e.addComponent(player, new Player());
 	Transform tmp = Transform();
-	tmp.position = vec3(10, 15, -15);
+	tmp.position = vec3(10, 10, -10);
 	vec3 desiredDir = -tmp.position;
 	vec3 desiredUp = vec3(0.0f, 1.0f, 0.0f); // +Y
 	mat4 View = glm::lookAt(
