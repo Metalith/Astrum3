@@ -39,35 +39,41 @@ displayModes mode = SHADED;
 bool showBounds = false;
 
 int main() {
-	if (!CreateWindow(window)) return -1;
-	srand(time(NULL));
-	//setSDF();
-	Engine e = Engine();
-	int player = e.createEntity();
-	e.addComponent(player, new Player());
-	Transform tmp = Transform();
-	tmp.position = vec3(10, 10, -10);
-	vec3 desiredDir = -tmp.position;
-	vec3 desiredUp = vec3(0.0f, 1.0f, 0.0f); // +Y
-	mat4 View = glm::lookAt(
-		-tmp.position, // Camera is at (4,3,-3), in World Space
-		glm::vec3(0, 0, 0), // and looks at the origin
-		glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
-	);
-	tmp.orientation = toQuat(View);
+	try
+	{
+		if (!CreateWindow(window)) return -1;
+		srand(time(NULL));
+		//setSDF();
+		Engine e = Engine();
+		int player = e.createEntity();
+		e.addComponent(player, new Player());
+		Transform tmp = Transform();
+		tmp.position = vec3(10, 10, -10);
+		vec3 desiredDir = -tmp.position;
+		vec3 desiredUp = vec3(0.0f, 1.0f, 0.0f); // +Y
+		mat4 View = glm::lookAt(
+			-tmp.position, // Camera is at (4,3,-3), in World Space
+			glm::vec3(0, 0, 0), // and looks at the origin
+			glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+		);
+		tmp.orientation = toQuat(View);
 
-	e.addComponent(player, &tmp);
-	e.addSystem(new TerrainSystem());
-	e.addSystem(new ControlSystem());
-	e.addSystem(new RenderSystem());
-	window = glfwGetCurrentContext();
-	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
-		glfwWindowShouldClose(window) == 0) e.update();
-	//std::cout << "THE END" << std::endl;
+		e.addComponent(player, &tmp);
+		e.addSystem(new TerrainSystem());
+		e.addSystem(new ControlSystem());
+		e.addSystem(new RenderSystem());
+		window = glfwGetCurrentContext();
+		while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+			glfwWindowShouldClose(window) == 0) e.update();
+		//std::cout << "THE END" << std::endl;
 
-	// Close OpenGL window and terminate GLFW
-	glfwTerminate();
+		// Close OpenGL window and terminate GLFW
+		glfwTerminate();
+	}
+	catch (std::exception& e)
+	{
 
+	}
 	return 0;
 }
 
