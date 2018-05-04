@@ -60,7 +60,7 @@ int main() {
 
 		e.addComponent(player, &tmp);
 		e.addSystem(new TerrainSystem());
-		e.addSystem(new ControlSystem());
+		e.addSystem(new ControlSystem()); // Jitters because we dont have delta time based movement, will run with variable time lengths resulting in random fast movement
 		e.addSystem(new RenderSystem());
 		window = glfwGetCurrentContext();
 		glfwSwapInterval(1);
