@@ -108,7 +108,7 @@ bool CreateWindow(GLFWwindow* window) {
 		glfwTerminate();
 		return -1;
 	}
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 	// Initialize AntTweakBar
 	// RenderSystem::initTw();
 	// // Create a tweak abar

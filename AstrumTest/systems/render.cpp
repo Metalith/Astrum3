@@ -44,7 +44,9 @@ RenderSystem::RenderSystem() {
 	//glDepthFunc(GL_LESS);
 	//glEnable(GL_CULL_FACE);
 	//    glCullFace(GL_FRONT);
-	  glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+	  //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -53,7 +55,7 @@ RenderSystem::RenderSystem() {
 	RenderSystem::DrawGrid();
 
 	// Create and compile our GLSL program from the shaders
-	programID = LoadShaders("../res/SimpleVertexShader.vert", "../res/SimpleFragmentShader.frag");
+	programID = LoadShaders("../res/grid.vert", "../res/grid.frag");
 
 	// Get a handle for our "MVP" uniform
 	ProjID = glGetUniformLocation(programID, "projection");

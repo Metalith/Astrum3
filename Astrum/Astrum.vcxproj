@@ -182,6 +182,8 @@
     <ClCompile Include="systems\terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\res\grid.frag" />
+    <None Include="..\res\grid.vert" />
     <None Include="..\res\SimpleFragmentShader.frag" />
     <None Include="..\res\SimpleVertexShader.vert" />
     <None Include="..\res\Voxel.frag" />
