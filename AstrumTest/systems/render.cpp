@@ -1,3 +1,6 @@
+#include "imgui.h"
+#include "imgui_impl_glfw_gl3.h"
+
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -62,6 +65,16 @@ RenderSystem::RenderSystem() {
 	ViewID = glGetUniformLocation(programID, "view");
 	ModelID = glGetUniformLocation(programID, "model");
 	// Our ModelViewProjection : multiplication of our 3 matrices
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
+	ImGui_ImplGlfwGL3_Init(this->window, true);
+
+	// Setup style
+	ImGui::StyleColorsDark();
 }
 
 void RenderSystem::update() {
@@ -103,6 +116,23 @@ void RenderSystem::update() {
 	}
 
 	// Swap buffers
+
+	ImGui_ImplGlfwGL3_NewFrame();
+	static float f = 0.0f;
+	static int counter = 0;
+	ImGui::Text("Hello, world!");                           // Display some text (you can use a format string too)
+	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f    
+
+
+	if (ImGui::Button("Button"))                            // Buttons return true when clicked (NB: most widgets return true when edited/activated)
+		counter++;
+	ImGui::SameLine();
+	ImGui::Text("counter = %d", counter);
+
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::Render();
+	ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 }

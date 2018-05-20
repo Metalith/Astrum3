@@ -6,6 +6,9 @@
 #include <fstream>
 #include <ctime>
 
+#include "imgui.h"
+#include "imgui_impl_glfw_gl3.h"
+
 // Include GLEW
 #include <GL/glew.h>
 
@@ -61,6 +64,8 @@ int main() {
 		e.addSystem(new RenderSystem());
 		window = glfwGetCurrentContext();
 		glfwSwapInterval(1);
+
+
 		while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 			glfwWindowShouldClose(window) == 0) e.update();
 		//std::cout << "THE END" << std::endl;
