@@ -6,6 +6,8 @@
 #include <fstream>
 #include <ctime>
 
+#include "debugOutput.h"
+
 #include "imgui.h"
 #include "imgui_impl_glfw_gl3.h"
 
@@ -32,17 +34,23 @@ using namespace glm;
 
 #include "common/quaternion_utils.hpp"
 
-bool		CreateWindow(GLFWwindow* window);
+bool		CreateGameWindow(GLFWwindow* window);
 std::string	UpdateVersion();
-
-typedef enum DISPLAYMODES { SHADED, WIREFRAME, POINTS } displayModes;
-displayModes mode = SHADED;
-bool showBounds = false;
 
 int main() {
 	try
 	{
-		if (!CreateWindow(window)) return -1;
+		static OutputDebugStringBuf<char> charDebugOutput;
+		std::cout.rdbuf(&charDebugOutput);
+		std::cerr.rdbuf(&charDebugOutput);
+		std::clog.rdbuf(&charDebugOutput);
+
+		static OutputDebugStringBuf<wchar_t> wcharDebugOutput;
+		std::wcout.rdbuf(&wcharDebugOutput);
+		std::wcerr.rdbuf(&wcharDebugOutput);
+		std::wclog.rdbuf(&wcharDebugOutput);
+
+		if (!CreateGameWindow(window)) return -1;
 		srand(time(NULL));
 		//setSDF();
 		Engine e = Engine();
@@ -80,7 +88,7 @@ int main() {
 	return 0;
 }
 
-bool CreateWindow(GLFWwindow* window) {
+bool CreateGameWindow(GLFWwindow* window) {
 	// Initialise GLFW
 	if (!glfwInit())
 	{

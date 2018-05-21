@@ -161,6 +161,7 @@
     <ClInclude Include="components\mesh.hpp" />
     <ClInclude Include="components\player.hpp" />
     <ClInclude Include="components\transform.hpp" />
+    <ClInclude Include="debugOutput.h" />
     <ClInclude Include="engine.hpp" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
