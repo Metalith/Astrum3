@@ -22,12 +22,6 @@
     <Filter Include="Header Files\Systems">
       <UniqueIdentifier>{9f58484d-c2d1-4d41-8cd2-d4933d624013}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Components">
-      <UniqueIdentifier>{37b743b5-4d63-48af-a921-89c1d1dc16c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Common">
-      <UniqueIdentifier>{702a79dc-942e-4f2a-b77e-141ee9f47cfa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\GUI">
       <UniqueIdentifier>{6b4d6164-9d64-46b7-afb9-0cbad966ed8a}</UniqueIdentifier>
     </Filter>
@@ -39,6 +33,12 @@
     </Filter>
     <Filter Include="Source Files\Systems">
       <UniqueIdentifier>{f79a44e2-7572-4781-bbe3-a37dc41991ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Components">
+      <UniqueIdentifier>{702a79dc-942e-4f2a-b77e-141ee9f47cfa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Common">
+      <UniqueIdentifier>{37b743b5-4d63-48af-a921-89c1d1dc16c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -58,25 +58,25 @@
       <Filter>Header Files\Systems</Filter>
     </ClInclude>
     <ClInclude Include="src\components\component.hpp">
-      <Filter>Header Files\Common</Filter>
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\components\mesh.hpp">
-      <Filter>Header Files\Common</Filter>
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\components\player.hpp">
-      <Filter>Header Files\Common</Filter>
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\components\transform.hpp">
-      <Filter>Header Files\Common</Filter>
+      <Filter>Header Files\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\common\quaternion_utils.hpp">
-      <Filter>Header Files\Components</Filter>
+      <Filter>Header Files\Common</Filter>
     </ClInclude>
     <ClInclude Include="src\common\shader.hpp">
-      <Filter>Header Files\Components</Filter>
+      <Filter>Header Files\Common</Filter>
     </ClInclude>
     <ClInclude Include="src\common\debugOutput.hpp">
-      <Filter>Header Files\Components</Filter>
+      <Filter>Header Files\Common</Filter>
     </ClInclude>
     <ClInclude Include="src\gui\imconfig.h">
       <Filter>Header Files\GUI</Filter>

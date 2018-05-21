@@ -73,6 +73,10 @@ int main() {
 		glfwSwapInterval(1);
 
 
+		glfwSetMouseButtonCallback(window, ControlSystem::mouse_callback); // - Directly redirect GLFW mouse button events to AntTweakBar
+																		   // glfwSetCursorPosCallback(window, (GLFWcursorposfun)TwEventMousePosGLFW);          // - Directly redirect GLFW mouse position events to AntTweakBar
+																		   // glfwSetScrollCallback(window, (GLFWscrollfun)TwEventMouseWheelGLFW);    // - Directly redirect GLFW mouse wheel events to AntTweakBar
+		glfwSetKeyCallback(window, ControlSystem::key_callback);
 		while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 			glfwWindowShouldClose(window) == 0) e.update();
 		//std::cout << "THE END" << std::endl;
@@ -125,11 +129,7 @@ bool CreateGameWindow(GLFWwindow* window) {
 	// RenderSystem::initTw();
 	// // Create a tweak abar
 	//
-	// // Set GLFW event callbacks. I removed glfwSetWindowSizeCallback for conciseness
-	// glfwSetMouseButtonCallback(window, (GLFWmousebuttonfun)TwEventMouseButtonGLFW); // - Directly redirect GLFW mouse button events to AntTweakBar
-	// glfwSetCursorPosCallback(window, (GLFWcursorposfun)TwEventMousePosGLFW);          // - Directly redirect GLFW mouse position events to AntTweakBar
-	// glfwSetScrollCallback(window, (GLFWscrollfun)TwEventMouseWheelGLFW);    // - Directly redirect GLFW mouse wheel events to AntTweakBar
-	glfwSetKeyCallback(window, ControlSystem::key_callback);                         // - Directly redirect GLFW key events to AntTweakBar
+	// // Set GLFW event callbacks. I removed glfwSetWindowSizeCallback for conciseness                         // - Directly redirect GLFW key events to AntTweakBar
 																					 // glfwSetCharCallback(window, (GLFWcharfun)TwEventCharGLFW);                      // - Directly redirect GLFW char events to AntTweakBar
 
 																					 // Ensure we can capture the escape key being pressed below

@@ -14,6 +14,10 @@ bool ControlSystem::moveD;
 bool ControlSystem::moveQ;
 bool ControlSystem::moveE;
 
+bool ControlSystem::dragScreen;
+double ControlSystem::mStartX;
+double ControlSystem::mStartY;
+
 float ControlSystem::speed = 3.f;
 float ControlSystem::rotSpeed = 3.f; // 3 units / seconds
 float ControlSystem::mouseSpeed = 0.0025f;
@@ -41,18 +45,22 @@ void ControlSystem::update() {
 	double currentTime = glfwGetTime();
 	float deltaTime = float(currentTime - lastTime);
 
-	//// Get mouse position
-	double xpos, ypos;
-	glfwGetCursorPos(window, &xpos, &ypos);
-	// Reset mouse position for next frame
-	glfwSetCursorPos(window, 1024/2, 768/2);
-	OffsetOrientation(tPlayer->orientation, glm::vec3(0.0f, 1.0f, 0.0f), -mouseSpeed * (512 - xpos));
-	OffsetOrientation(tPlayer->orientation, glm::vec3(1.0f, 0.0f, 0.0f), mouseSpeed * (384 - ypos));
-	glm::vec3 direction(0,0,1);
-	glm::vec3 right(1,0,0);
+	if (dragScreen)
+	{
+		//// Get mouse position
+		double xpos, ypos;
+		glfwGetCursorPos(window, &xpos, &ypos);
+		// Reset mouse position for next frame
+		glfwSetCursorPos(window, mStartX, mStartY);
+		OffsetOrientation(tPlayer->orientation, glm::vec3(0.0f, 1.0f, 0.0f), -mouseSpeed * (mStartX - xpos));
+		OffsetOrientation(tPlayer->orientation, glm::vec3(1.0f, 0.0f, 0.0f), mouseSpeed * (mStartY - ypos));
+	}
+	glm::vec3 direction(0, 0, 1);
+	glm::vec3 right(1, 0, 0);
 
-	direction =  direction * tPlayer->orientation;
+	direction = direction * tPlayer->orientation;
 	right = right * tPlayer->orientation;
+
 	if (moveW) tPlayer->position += direction * deltaTime * speed;
 	if (moveS) tPlayer->position -= direction * deltaTime * speed;
 	if (moveA) tPlayer->position += right * deltaTime * speed;
@@ -76,6 +84,17 @@ void ControlSystem::key_callback(GLFWwindow* window, int key, int scancode, int 
 						if (set) ControlSystem::speed = 150.0f;
 						else ControlSystem::speed = 3.0f;
 						break;
+	}
+}
+
+void ControlSystem::mouse_callback(GLFWwindow* window, int button, int action, int mods) {
+	bool set = (action != GLFW_RELEASE);
+	switch (button) {
+		case GLFW_MOUSE_BUTTON_MIDDLE: 
+			dragScreen = set;
+			if (set)
+				glfwGetCursorPos(window, &mStartX, &mStartY);
+			break;
 	}
 }
 

@@ -12,7 +12,8 @@ class ControlSystem: public System {
 		void update();
 		void addEntity(int e);
 
-		static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+		static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);	  // Need to not make these static
+		static void mouse_callback(GLFWwindow* window, int button, int action, int mods);
 	private:
 		GLFWwindow* window;
 		Transform* tPlayer = nullptr;
@@ -20,6 +21,10 @@ class ControlSystem: public System {
 		static float speed;
 		static float rotSpeed;
 		static float mouseSpeed;
+
+		static bool dragScreen;
+		static double mStartX, mStartY;
+
 		static bool  moveW, moveS, moveD, moveA, moveQ, moveE;
 
 		void OffsetOrientation(quat& q, const glm::vec3 &_axis, float fAngRad);
