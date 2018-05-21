@@ -20,18 +20,18 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{2C424C6D-5745-4D5F-87E9-1C1B8D32D7F6}</ProjectGuid>
+    <ProjectGuid>{659D9C61-0719-41FA-AEEB-278CBAC8021A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Astrum</RootNamespace>
+    <RootNamespace>AstrumTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <ProjectName>AstrumWin</ProjectName>
+    <ProjectName>Astrum</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -85,20 +85,24 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>Create</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>GLEW_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;GLEW_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Metal\source\repos\Astrum\Astrum;C:\local\glm-0.9.8.4\glm;C:\local\glfw-3.2.1\include;C:\local\glew-2.1.0\include;C:\local\libnoise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\libs\glm-0.9.8.4\glm;$(ProjectDir)\libs\glfw-3.2.1.bin.WIN32\include;$(ProjectDir)\libs\glew-2.1.0\include;$(ProjectDir)\libs\libnoise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>stdafx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <LanguageStandard>
+      </LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\local\glfw-3.2.1.bin.WIN32\lib-vc2015;C:\local\glew-2.1.0\lib\Release\Win32;C:\local\libnoise\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)\libs\glfw-3.2.1.bin.WIN32\lib-vc2015;$(ProjectDir)\libs\glew-2.1.0\lib\Release\Win32;$(ProjectDir)\libs\libnoise\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libnoise.lib;opengl32.lib;glew32s.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <EntryPointSymbol>
+      </EntryPointSymbol>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -152,42 +156,41 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="common\quaternion_utils.hpp" />
-    <ClInclude Include="common\shader.hpp" />
-    <ClInclude Include="components\component.hpp" />
-    <ClInclude Include="components\mesh.hpp" />
-    <ClInclude Include="components\player.hpp" />
-    <ClInclude Include="components\transform.hpp" />
-    <ClInclude Include="engine.hpp" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="systems\controls.hpp" />
-    <ClInclude Include="systems\render.hpp" />
-    <ClInclude Include="systems\system.hpp" />
-    <ClInclude Include="systems\terrain.hpp" />
-    <ClInclude Include="targetver.h" />
+    <ClInclude Include="src\common\debugOutput.hpp" />
+    <ClInclude Include="src\common\quaternion_utils.hpp" />
+    <ClInclude Include="src\common\shader.hpp" />
+    <ClInclude Include="src\components\component.hpp" />
+    <ClInclude Include="src\components\mesh.hpp" />
+    <ClInclude Include="src\components\player.hpp" />
+    <ClInclude Include="src\components\transform.hpp" />
+    <ClInclude Include="src\engine.hpp" />
+    <ClInclude Include="src\gui\imconfig.h" />
+    <ClInclude Include="src\gui\imgui.h" />
+    <ClInclude Include="src\gui\imgui_impl_glfw_gl3.h" />
+    <ClInclude Include="src\gui\imgui_internal.h" />
+    <ClInclude Include="src\gui\stb_rect_pack.h" />
+    <ClInclude Include="src\gui\stb_textedit.h" />
+    <ClInclude Include="src\gui\stb_truetype.h" />
+    <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\systems\controls.hpp" />
+    <ClInclude Include="src\systems\render.hpp" />
+    <ClInclude Include="src\systems\system.hpp" />
+    <ClInclude Include="src\systems\terrain.hpp" />
+    <ClInclude Include="src\targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Astrum.cpp" />
-    <ClCompile Include="common\quaternion_utils.cpp" />
-    <ClCompile Include="common\shader.cpp" />
-    <ClCompile Include="engine.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="systems\controls.cpp" />
-    <ClCompile Include="systems\render.cpp" />
-    <ClCompile Include="systems\terrain.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\res\grid.frag" />
-    <None Include="..\res\grid.vert" />
-    <None Include="..\res\SimpleFragmentShader.frag" />
-    <None Include="..\res\SimpleVertexShader.vert" />
-    <None Include="..\res\Voxel.frag" />
-    <None Include="..\res\Voxel.vert" />
+    <ClCompile Include="src\Astrum.cpp" />
+    <ClCompile Include="src\common\quaternion_utils.cpp" />
+    <ClCompile Include="src\common\shader.cpp" />
+    <ClCompile Include="src\engine.cpp" />
+    <ClCompile Include="src\gui\imgui.cpp" />
+    <ClCompile Include="src\gui\imgui_demo.cpp" />
+    <ClCompile Include="src\gui\imgui_draw.cpp" />
+    <ClCompile Include="src\gui\imgui_impl_glfw_gl3.cpp" />
+    <ClCompile Include="src\stdafx.cpp" />
+    <ClCompile Include="src\systems\controls.cpp" />
+    <ClCompile Include="src\systems\render.cpp" />
+    <ClCompile Include="src\systems\terrain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

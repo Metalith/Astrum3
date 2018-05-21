@@ -1,3 +1,6 @@
+#include "gui\imgui.h"
+#include "gui\imgui_impl_glfw_gl3.h"
+
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -39,25 +42,39 @@ RenderSystem::RenderSystem() {
 
 
 	// Enable depth test
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 	// Accept fragment if it closer to the camera than the former one
-	glDepthFunc(GL_LESS);
+	//glDepthFunc(GL_LESS);
 	//glEnable(GL_CULL_FACE);
 	//    glCullFace(GL_FRONT);
 	  //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
+	
+	RenderSystem::DrawGrid();
 
 	// Create and compile our GLSL program from the shaders
-	programID = LoadShaders("../res/Voxel.vert", "../res/Voxel.frag");
+	programID = LoadShaders("./res/grid.vert", "./res/grid.frag");
 
 	// Get a handle for our "MVP" uniform
 	ProjID = glGetUniformLocation(programID, "projection");
 	ViewID = glGetUniformLocation(programID, "view");
 	ModelID = glGetUniformLocation(programID, "model");
 	// Our ModelViewProjection : multiplication of our 3 matrices
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
+	//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
+	ImGui_ImplGlfwGL3_Init(this->window, true);
+
+	// Setup style
+	ImGui::StyleColorsDark();
 }
 
 void RenderSystem::update() {
@@ -92,7 +109,6 @@ void RenderSystem::update() {
 	for (int i = 0; i < vertexArrays.size(); i++) {
 		glBindVertexArray(vertexArrays[i]); // Bind our Vertex Array Object
 		glEnableVertexAttribArray(0);
-		 glEnableVertexAttribArray(1);
 		//glDisableVertexAttribArray(2);
 		// glDrawElements(GL_TRIANGLES, sizes[i], GL_UNSIGNED_INT, (void*)0);
 		glDrawArrays(GL_TRIANGLES, 0, vSizes[i]);
@@ -100,6 +116,23 @@ void RenderSystem::update() {
 	}
 
 	// Swap buffers
+
+	ImGui_ImplGlfwGL3_NewFrame();
+	static float f = 0.0f;
+	static int counter = 0;
+	ImGui::Text("Hello, world!");                           // Display some text (you can use a format string too)
+	ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f    
+
+
+	if (ImGui::Button("Button"))                            // Buttons return true when clicked (NB: most widgets return true when edited/activated)
+		counter++;
+	ImGui::SameLine();
+	ImGui::Text("counter = %d", counter);
+
+	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::Render();
+	ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+
 	glfwSwapBuffers(window);
 	glfwPollEvents();
 }
@@ -155,6 +188,44 @@ void RenderSystem::addEntity(int e) {
 	bSizes.push_back(m->bounds.size() / 3);
 	vSizes.push_back(m->vertices.size() / 3);
 	totalVerts += m->vertices.size() / 3;
+
+	glBindVertexArray(0);
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+}
+
+void RenderSystem::DrawGrid()
+{
+	GLuint VertexArrayID;
+	glGenVertexArrays(1, &VertexArrayID);
+	glBindVertexArray(VertexArrayID);
+
+	GLuint vertexbuffer;
+	glGenBuffers(1, &vertexbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+
+	std::vector<GLfloat> vertices = {
+		-1, 0, -1,
+		-1, 0,  1,
+		 1, 0,  1,
+
+		-1, 0, -1,
+		 1, 0,  1,
+		 1, 0, -1
+	};
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), &vertices[0], GL_STREAM_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(
+		0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+		3,                  // size
+		GL_FLOAT,           // type
+		GL_FALSE,           // normalized?
+		0,                  // stride
+		(void*)0            // array buffer offset
+	);
+
+	vertexArrays.push_back(VertexArrayID);
+	vSizes.push_back(vertices.size() / 3);
 
 	glBindVertexArray(0);
 	glDisableVertexAttribArray(0);

@@ -1,14 +1,17 @@
 // Astrum.cpp : Defines the entry point for the console application.
-//
-#include "stdafx.h" 
 //#pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
 // Include standard headers
 #include <string>
 #include <fstream>
 #include <ctime>
 
+#include "common\debugOutput.hpp"
+
+#include "gui\imgui.h"
+#include "gui\imgui_impl_glfw_gl3.h"
+
 // Include GLEW
-#include <GL/glew.h>
+#include <GL\glew.h>
 
 // Include GLFW
 #include <GLFW\glfw3.h>
@@ -24,24 +27,29 @@ using namespace glm;
 #include "engine.hpp"
 #include "systems/render.hpp"
 #include "systems/controls.hpp"
-#include "systems/terrain.hpp"
 
 #include "components/player.hpp"
 #include "components/transform.hpp"
 
 #include "common/quaternion_utils.hpp"
 
-bool		CreateWindow(GLFWwindow* window);
+bool		CreateGameWindow(GLFWwindow* window);
 std::string	UpdateVersion();
-
-typedef enum DISPLAYMODES { SHADED, WIREFRAME, POINTS } displayModes;
-displayModes mode = SHADED;
-bool showBounds = false;
 
 int main() {
 	try
 	{
-		if (!CreateWindow(window)) return -1;
+		static OutputDebugStringBuf<char> charDebugOutput;
+		std::cout.rdbuf(&charDebugOutput);
+		std::cerr.rdbuf(&charDebugOutput);
+		std::clog.rdbuf(&charDebugOutput);
+
+		static OutputDebugStringBuf<wchar_t> wcharDebugOutput;
+		std::wcout.rdbuf(&wcharDebugOutput);
+		std::wcerr.rdbuf(&wcharDebugOutput);
+		std::wclog.rdbuf(&wcharDebugOutput);
+
+		if (!CreateGameWindow(window)) return -1;
 		srand(time(NULL));
 		//setSDF();
 		Engine e = Engine();
@@ -59,11 +67,12 @@ int main() {
 		tmp.orientation = toQuat(View);
 
 		e.addComponent(player, &tmp);
-		e.addSystem(new TerrainSystem());
 		e.addSystem(new ControlSystem()); // Jitters because we dont have delta time based movement, will run with variable time lengths resulting in random fast movement
 		e.addSystem(new RenderSystem());
 		window = glfwGetCurrentContext();
 		glfwSwapInterval(1);
+
+
 		while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 			glfwWindowShouldClose(window) == 0) e.update();
 		//std::cout << "THE END" << std::endl;
@@ -78,7 +87,7 @@ int main() {
 	return 0;
 }
 
-bool CreateWindow(GLFWwindow* window) {
+bool CreateGameWindow(GLFWwindow* window) {
 	// Initialise GLFW
 	if (!glfwInit())
 	{
@@ -111,7 +120,7 @@ bool CreateWindow(GLFWwindow* window) {
 		glfwTerminate();
 		return -1;
 	}
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 	// Initialize AntTweakBar
 	// RenderSystem::initTw();
 	// // Create a tweak abar
