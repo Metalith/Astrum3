@@ -79,9 +79,12 @@ int main() {
 		glfwSetKeyCallback(window, ControlSystem::key_callback);
 		while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 			glfwWindowShouldClose(window) == 0) e.update();
-		//std::cout << "THE END" << std::endl;
+
+		ImGui_ImplGlfwGL3_Shutdown();
+		ImGui::DestroyContext();
 
 		// Close OpenGL window and terminate GLFW
+		glfwDestroyWindow(window);
 		glfwTerminate();
 	}
 	catch (std::exception& e)

@@ -93,14 +93,13 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)\src;$(ProjectDir)\libs\glm-0.9.8.4\glm;$(ProjectDir)\libs\glfw-3.2.1.bin.WIN32\include;$(ProjectDir)\libs\glew-2.1.0\include;$(ProjectDir)\libs\libnoise\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>stdafx.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
-      <LanguageStandard>
-      </LanguageStandard>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)\libs\glfw-3.2.1.bin.WIN32\lib-vc2015;$(ProjectDir)\libs\glew-2.1.0\lib\Release\Win32;$(ProjectDir)\libs\libnoise\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libnoise.lib;opengl32.lib;glew32s.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)\libs\glfw-3.2.1.bin.WIN32\lib-vc2015;$(ProjectDir)\libs\glew-2.1.0\lib\Debug\Win32;$(ProjectDir)\libs\libnoise\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libnoise.lib;glfw3.lib;glew32sd.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
     </Link>

@@ -7,6 +7,8 @@
 
 #include <iostream>
 
+#include "gui\imgui.h"
+
 bool ControlSystem::moveW;
 bool ControlSystem::moveA;
 bool ControlSystem::moveS;
@@ -45,15 +47,34 @@ void ControlSystem::update() {
 	double currentTime = glfwGetTime();
 	float deltaTime = float(currentTime - lastTime);
 
+	ImGuiIO& io = ImGui::GetIO();
+
+	double mouse_x, mouse_y;
+	glfwGetCursorPos(this->window, &mouse_x, &mouse_y);
+
+	if (glfwGetWindowAttrib(this->window, GLFW_FOCUSED))
+	{
+		// Set OS mouse position if requested (only used when ImGuiConfigFlags_NavEnableSetMousePos is enabled by user)
+		if (io.WantSetMousePos)
+		{
+			glfwSetCursorPos(this->window, (double)io.MousePos.x, (double)io.MousePos.y);
+		}
+		else
+		{
+			io.MousePos = ImVec2((float)mouse_x, (float)mouse_y);
+		}
+	}
+	else
+	{
+		io.MousePos = ImVec2(-FLT_MAX, -FLT_MAX);
+	}
+
 	if (dragScreen)
 	{
-		//// Get mouse position
-		double xpos, ypos;
-		glfwGetCursorPos(window, &xpos, &ypos);
 		// Reset mouse position for next frame
 		glfwSetCursorPos(window, mStartX, mStartY);
-		OffsetOrientation(tPlayer->orientation, glm::vec3(0.0f, 1.0f, 0.0f), -mouseSpeed * (mStartX - xpos));
-		OffsetOrientation(tPlayer->orientation, glm::vec3(1.0f, 0.0f, 0.0f), mouseSpeed * (mStartY - ypos));
+		OffsetOrientation(tPlayer->orientation, glm::vec3(0.0f, 1.0f, 0.0f), -mouseSpeed * (mStartX - mouse_x));
+		OffsetOrientation(tPlayer->orientation, glm::vec3(1.0f, 0.0f, 0.0f), mouseSpeed * (mStartY - mouse_y));
 	}
 	glm::vec3 direction(0, 0, 1);
 	glm::vec3 right(1, 0, 0);
