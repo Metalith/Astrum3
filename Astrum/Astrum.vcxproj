@@ -102,6 +102,10 @@
       <AdditionalDependencies>libnoise.lib;glfw3.lib;glew32sd.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
+      <IgnoreAllDefaultLibraries>
+      </IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -185,11 +189,18 @@
     <ClCompile Include="src\gui\imgui.cpp" />
     <ClCompile Include="src\gui\imgui_demo.cpp" />
     <ClCompile Include="src\gui\imgui_draw.cpp" />
-    <ClCompile Include="src\gui\imgui_impl_glfw_gl3.cpp" />
     <ClCompile Include="src\stdafx.cpp" />
     <ClCompile Include="src\systems\controls.cpp" />
     <ClCompile Include="src\systems\render.cpp" />
     <ClCompile Include="src\systems\terrain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\grid.frag" />
+    <None Include="res\grid.vert" />
+    <None Include="res\SimpleFragmentShader.frag" />
+    <None Include="res\SimpleVertexShader.vert" />
+    <None Include="res\Voxel.frag" />
+    <None Include="res\Voxel.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

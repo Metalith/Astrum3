@@ -26,8 +26,12 @@ float ControlSystem::mouseSpeed = 0.0025f;
 
 ControlSystem::ControlSystem() {
 	std::cout << "New System :: Control!" << std::endl;
+
 	setComponent<Player>();
 	this->window = glfwGetCurrentContext();
+
+	glfwSetMouseButtonCallback(window, ControlSystem::mouse_callback);
+	glfwSetKeyCallback(window, ControlSystem::key_callback);
 }
 
 void ControlSystem::addEntity(int e) {

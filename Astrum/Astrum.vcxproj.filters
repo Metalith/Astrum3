@@ -119,9 +119,6 @@
     <ClCompile Include="src\gui\imgui_draw.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="src\gui\imgui_impl_glfw_gl3.cpp">
-      <Filter>Source Files\GUI</Filter>
-    </ClCompile>
     <ClCompile Include="src\common\quaternion_utils.cpp">
       <Filter>Source Files\Common</Filter>
     </ClCompile>
@@ -143,5 +140,25 @@
     <ClCompile Include="src\Astrum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\grid.vert">
+      <Filter>Resource Files\Vertex Shaders</Filter>
+    </None>
+    <None Include="res\SimpleVertexShader.vert">
+      <Filter>Resource Files\Vertex Shaders</Filter>
+    </None>
+    <None Include="res\Voxel.vert">
+      <Filter>Resource Files\Vertex Shaders</Filter>
+    </None>
+    <None Include="res\grid.frag">
+      <Filter>Resource Files\Fragment Shaders</Filter>
+    </None>
+    <None Include="res\SimpleFragmentShader.frag">
+      <Filter>Resource Files\Fragment Shaders</Filter>
+    </None>
+    <None Include="res\Voxel.frag">
+      <Filter>Resource Files\Fragment Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

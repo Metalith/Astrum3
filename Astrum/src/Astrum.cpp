@@ -8,7 +8,6 @@
 #include "common\debugOutput.hpp"
 
 #include "gui\imgui.h"
-#include "gui\imgui_impl_glfw_gl3.h"
 
 // Include GLEW
 #include <GL\glew.h>
@@ -36,6 +35,11 @@ using namespace glm;
 bool		CreateGameWindow(GLFWwindow* window);
 std::string	UpdateVersion();
 
+static void glfw_error_callback(int error, const char* description)
+{
+	std::cerr << "Error " << error << ", " <<  description;
+}
+
 int main() {
 	try
 	{
@@ -49,10 +53,12 @@ int main() {
 		std::wcerr.rdbuf(&wcharDebugOutput);
 		std::wclog.rdbuf(&wcharDebugOutput);
 
+		glfwSetErrorCallback(glfw_error_callback);
 		if (!CreateGameWindow(window)) return -1;
 		srand(time(NULL));
 		//setSDF();
-		Engine e = Engine();
+		Engine e = Engine(); // Make static
+		// EntityFactory::CreatePlayer(x, y, z)
 		int player = e.createEntity();
 		e.addComponent(player, new Player());
 		Transform tmp = Transform();
@@ -72,15 +78,10 @@ int main() {
 		window = glfwGetCurrentContext();
 		glfwSwapInterval(1);
 
-
-		glfwSetMouseButtonCallback(window, ControlSystem::mouse_callback); // - Directly redirect GLFW mouse button events to AntTweakBar
-																		   // glfwSetCursorPosCallback(window, (GLFWcursorposfun)TwEventMousePosGLFW);          // - Directly redirect GLFW mouse position events to AntTweakBar
-																		   // glfwSetScrollCallback(window, (GLFWscrollfun)TwEventMouseWheelGLFW);    // - Directly redirect GLFW mouse wheel events to AntTweakBar
-		glfwSetKeyCallback(window, ControlSystem::key_callback);
 		while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 			glfwWindowShouldClose(window) == 0) e.update();
 
-		ImGui_ImplGlfwGL3_Shutdown();
+		//ImGui_ImplGlfwGL3_Shutdown();
 		ImGui::DestroyContext();
 
 		// Close OpenGL window and terminate GLFW
@@ -128,14 +129,7 @@ bool CreateGameWindow(GLFWwindow* window) {
 		return -1;
 	}
 	glfwSwapInterval(1);
-	// Initialize AntTweakBar
-	// RenderSystem::initTw();
-	// // Create a tweak abar
-	//
-	// // Set GLFW event callbacks. I removed glfwSetWindowSizeCallback for conciseness                         // - Directly redirect GLFW key events to AntTweakBar
-																					 // glfwSetCharCallback(window, (GLFWcharfun)TwEventCharGLFW);                      // - Directly redirect GLFW char events to AntTweakBar
 
-																					 // Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 	// Hide the mouse and enable unlimited mouvement
 	// glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
