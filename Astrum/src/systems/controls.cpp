@@ -115,12 +115,14 @@ void ControlSystem::key_callback(GLFWwindow* window, int key, int scancode, int 
 void ControlSystem::mouse_callback(GLFWwindow* window, int button, int action, int mods) {
 	bool set = (action != GLFW_RELEASE);
 	switch (button) {
-		case GLFW_MOUSE_BUTTON_MIDDLE: 
+		case GLFW_MOUSE_BUTTON_MIDDLE:
 			dragScreen = set;
 			if (set)
 				glfwGetCursorPos(window, &mStartX, &mStartY);
 			break;
 	}
+	ImGuiIO& io = ImGui::GetIO();
+	io.MouseDown[button] = set;
 }
 
 void ControlSystem::OffsetOrientation(quat& q, const glm::vec3 &_axis, float fAngRad) {
