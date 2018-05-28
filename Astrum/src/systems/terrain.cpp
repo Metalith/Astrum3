@@ -2,7 +2,7 @@
 #include "system.hpp" 
 #include "engine.hpp"
 
-#include "components\mesh.hpp"
+#include "components/renderable.hpp"
 
 #include <glm/glm.hpp>
 using namespace glm;
@@ -12,7 +12,6 @@ using namespace noise;
 #include <iostream>
 #include <vector>
 
-Mesh mesh = Mesh();
 module::Perlin myModule;
 
 const int CHUNK_SIZE = 16;
@@ -26,7 +25,10 @@ TerrainSystem::TerrainSystem() {
 	*/
 	//GenerateAsteroid(0, 0, 0);
 	int chunk = engine->createEntity();
-	engine->addComponent(chunk, &mesh);
+	Renderable* r = new Renderable();
+	r->shaderID = 1;
+	r->doubleSided = false;
+	engine->addComponent(chunk, r);
 	
 	int i, j, k;
 	for (i = -CHUNK_SIZE; i < CHUNK_SIZE; i++) {
@@ -34,7 +36,7 @@ TerrainSystem::TerrainSystem() {
 			for (j = -CHUNK_SIZE; j < CHUNK_SIZE; j++) {
 				// int value = (myModule.GetValue(((double) i) / CHUNK_SIZE, ((double) j) / CHUNK_SIZE, ((double) k) /  CHUNK_SIZE)) * 8.0;
 				// if (value > 0)
-					GenerateCube(i, j, k, &mesh);
+					GenerateCube(i, j, k, r);
 			}   
 		}   
 	}
@@ -339,7 +341,7 @@ int triTable[256][16] =
 Optimizations:
 	- Precalc SDF Values, crazy slow
 */
-void TerrainSystem::GenerateCube(int x, int y, int z, Mesh * mesh) {
+void TerrainSystem::GenerateCube(int x, int y, int z, Renderable* r) {
 	int cubeindex = 0;
 	glm::vec3 pos(x, y, z); 
 	if (sdf(pos + vec3(-0.5, -0.5,  0.5)) < 0) cubeindex |= 1;
@@ -385,9 +387,9 @@ void TerrainSystem::GenerateCube(int x, int y, int z, Mesh * mesh) {
 
 	/* Create the triangle */
 	for (int i=0;triTable[cubeindex][i]!=-1;i++) {
-		mesh->vertices.push_back(vertlist[triTable[cubeindex][i]].x);
-		mesh->vertices.push_back(vertlist[triTable[cubeindex][i]].y);
-		mesh->vertices.push_back(vertlist[triTable[cubeindex][i]].z);
+		r->vertices.push_back(vertlist[triTable[cubeindex][i]].x);
+		r->vertices.push_back(vertlist[triTable[cubeindex][i]].y);
+		r->vertices.push_back(vertlist[triTable[cubeindex][i]].z);
 		switch (i % 3)
 		{
 			case 0:
@@ -401,9 +403,9 @@ void TerrainSystem::GenerateCube(int x, int y, int z, Mesh * mesh) {
 				norm = -glm::normalize(glm::cross(p2 - p1, p3 - p1));
 				for (int j = 0; j < 3; j++)
 				{
-					mesh->normals.push_back(norm.x);
-					mesh->normals.push_back(norm.y);
-					mesh->normals.push_back(norm.z);
+					r->normals.push_back(norm.x);
+					r->normals.push_back(norm.y);
+					r->normals.push_back(norm.z);
 				}
 				break;
 		}

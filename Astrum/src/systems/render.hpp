@@ -19,6 +19,9 @@ class RenderSystem: public System {
 		
 		std::vector<GLuint> vertexArrays;
 		std::vector<int> vSizes;
+		std::vector<int> nSizes;
+		std::vector<int> vaShaders;
+		std::vector<int> vaSides;
 
 		void RenderGUI();
 

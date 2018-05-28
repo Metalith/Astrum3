@@ -1,5 +1,5 @@
-#include "gui\imgui.h"
-#include "gui\imgui_impl_glfw_gl3.h"
+#include "gui/imgui.h"
+#include "gui/imgui_impl_glfw_gl3.h"
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -10,11 +10,10 @@ using namespace glm;
 
 #include <iostream>
 
-#include "systems\render.hpp"
+#include "systems/render.hpp"
 #include "common/shader.hpp"
 
 #include "components/player.hpp"
-#include "components/mesh.hpp" 
 #include "components/renderable.hpp"
 
 #include "engine.hpp"
@@ -26,14 +25,11 @@ using namespace glm;
 #include <GLFW/glfw3native.h>
 #endif
 
-GLuint programID;
-GLuint vertexbuffer;
-GLuint normalbuffer;
-GLuint elementbuffer;
+GLuint programID[2];
 
-GLuint ProjID;
-GLuint ModelID;
-GLuint ViewID;
+GLuint ProjID[2];
+GLuint ModelID[2];
+GLuint ViewID[2];
 
 glm::mat4 Projection;
 glm::mat4 View;
@@ -42,7 +38,7 @@ std::vector<unsigned short> indices;
 RenderSystem::RenderSystem() {
 	std::cerr << "New System :: Render!" << std::endl;
 	setComponent<Player>();
-	setComponent<Mesh>();
+	setComponent<Renderable>();
 	this->window = glfwGetCurrentContext();
 
 	// Dark blue background
@@ -62,12 +58,16 @@ RenderSystem::RenderSystem() {
 	RenderSystem::DrawGrid();
 
 	// Create and compile our GLSL program from the shaders
-	programID = LoadShaders("./res/grid.vert", "./res/grid.frag");
+	programID[0] = LoadShaders("./res/grid.vert", "./res/grid.frag");
+	programID[1] = LoadShaders("./res/voxel.vert", "./res/voxel.frag");
 
 	// Get a handle for our "MVP" uniform
-	ProjID = glGetUniformLocation(programID, "projection");
-	ViewID = glGetUniformLocation(programID, "view");
-	ModelID = glGetUniformLocation(programID, "model");
+	ProjID[0] = glGetUniformLocation(programID[0], "projection");
+	ViewID[0] = glGetUniformLocation(programID[0], "view");
+	ModelID[0] = glGetUniformLocation(programID[0], "model");
+	ProjID[1] = glGetUniformLocation(programID[1], "projection");
+	ViewID[1] = glGetUniformLocation(programID[1], "view");
+	ModelID[1] = glGetUniformLocation(programID[1], "model");
 	// Our ModelViewProjection : multiplication of our 3 matrices
 
 	IMGUI_CHECKVERSION();
@@ -92,9 +92,6 @@ void RenderSystem::update() {
 	// Clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Use our shader
-	glUseProgram(programID);
-
 	glm::vec3 direction(0, 0, 1);
 	glm::vec3 right(1, 0, 0);
 	direction = direction * tPlayer->orientation;
@@ -111,11 +108,16 @@ void RenderSystem::update() {
 	// Model matrix : an identity matrix (model will be at the origin)
 	Model = glm::mat4(1.0f);
 
-	glUniformMatrix4fv(ProjID, 1, GL_FALSE, &Projection[0][0]);
-	glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
-	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
+	
 
 	for (uint i = 0; i < vertexArrays.size(); i++) {
+		int id = vaShaders[i];
+		glUseProgram(programID[id]);
+
+		glUniformMatrix4fv(ProjID[id], 1, GL_FALSE, &Projection[0][0]);
+		glUniformMatrix4fv(ViewID[id], 1, GL_FALSE, &View[0][0]);
+		glUniformMatrix4fv(ModelID[id], 1, GL_FALSE, &Model[0][0]);
+
 		glBindVertexArray(vertexArrays[i]); // Bind our Vertex Array Object
 		glEnableVertexAttribArray(0);
 		//	glEnableVertexAttribArray(1);
@@ -139,7 +141,7 @@ void RenderSystem::addEntity(int e) {
 		return;
 	}
 	System::addEntity(e);
-	Mesh* m = engine->getComponent<Mesh>(e);
+	Renderable* r = engine->getComponent<Renderable>(e);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -148,7 +150,7 @@ void RenderSystem::addEntity(int e) {
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, m->vertices.size() * sizeof(GLfloat), &m->vertices[0], GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, r->vertices.size() * sizeof(GLfloat), &r->vertices[0], GL_STREAM_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(
 		0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
@@ -159,22 +161,22 @@ void RenderSystem::addEntity(int e) {
 		(void*)0            // array buffer offset
 	);
 
-	//if (m->normals.size() > 0)
-	//{
-	//	GLuint normalbuffer;
-	//	glGenBuffers(1, &normalbuffer);
-	//	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-	//	glBufferData(GL_ARRAY_BUFFER, m->normals.size() * sizeof(GLfloat), &m->normals[0], GL_STATIC_DRAW);
-	//	glEnableVertexAttribArray(1);
-	//	glVertexAttribPointer(
-	//		1,                  // attribute. No particular reason for 0, but must match the layout in the shader.
-	//		3,                  // size
-	//		GL_FLOAT,           // type
-	//		GL_FALSE,           // normalized?
-	//		0,                  // stride
-	//		(void*)0            // array buffer offset
-	//	);
-	//}
+	if (r->normals.size() > 0)
+	{
+		GLuint normalbuffer;
+		glGenBuffers(1, &normalbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+		glBufferData(GL_ARRAY_BUFFER, r->normals.size() * sizeof(GLfloat), &r->normals[0], GL_STATIC_DRAW);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(
+			1,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+			3,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+		);
+	}
 
 	/*GLuint indexbuffer;
 	glGenBuffers(1, &indexbuffer);
@@ -182,7 +184,10 @@ void RenderSystem::addEntity(int e) {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m->indices.size() * sizeof(int), &m->indices[0], GL_STATIC_DRAW);*/
 
 	vertexArrays.push_back(VertexArrayID);
-	vSizes.push_back(m->vertices.size() / 3);
+	vSizes.push_back(r->vertices.size() / 3);
+	nSizes.push_back(r->normals.size() / 3);
+	vaShaders.push_back(r->shaderID);
+	vaSides.push_back(r->doubleSided);
 
 	glBindVertexArray(0);
 	glDisableVertexAttribArray(0);
@@ -192,28 +197,19 @@ void RenderSystem::addEntity(int e) {
 void RenderSystem::DrawGrid()
 {
 	int e = engine->createEntity();
-	Mesh *r = new Mesh();
-	r->vertices = {
-		-100, 0, -100,
-		 100, 0,  100,
-		 100, 0,  100,
-
-		-100, 0, -100,
-		 100, 0,  100,
-		 100, 0, -100
-	};
-	engine->addComponent(e, r);
-	Renderable *r2 = new Renderable();
+	Renderable *r = new Renderable();
 	r->vertices = {
 		-100, 0, -100,
 		-100, 0,  100,
 		 100, 0,  100,
 
 		-100, 0, -100,
-	     100, 0,  100,
+		 100, 0,  100,
 		 100, 0, -100
 	};
-	engine->addComponent(e, r2);
+	r->shaderID = 0;
+	r->doubleSided = true;
+	engine->addComponent(e, r);
 }
 
 void RenderSystem::RenderGUI()
@@ -248,6 +244,8 @@ void RenderSystem::RenderGUI()
 	ImGui::Text("counter = %d", counter);
 
 	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::Text("World Position: %.2f, %.2f, %.2f", tPlayer->position.x, tPlayer->position.y, tPlayer->position.z);
+
 	ImGui::Render();
 	ImGui_RenderDrawData(ImGui::GetDrawData());
 }

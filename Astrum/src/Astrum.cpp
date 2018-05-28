@@ -26,7 +26,7 @@ using namespace glm;
 #include "engine.hpp"
 #include "systems/render.hpp"
 #include "systems/controls.hpp"	
-#include "systems/Terrain.hpp"
+#include "systems/terrain.hpp"
 
 #include "components/player.hpp"
 #include "components/transform.hpp"
