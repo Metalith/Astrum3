@@ -105,6 +105,9 @@
     <ClInclude Include="src\targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\components\renderable.hpp">
+      <Filter>Header Files\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\engine.cpp">

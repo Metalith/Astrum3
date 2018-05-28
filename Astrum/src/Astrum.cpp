@@ -7,13 +7,13 @@
 
 #include "common\debugOutput.hpp"
 
-#include "gui\imgui.h"
+#include "gui/imgui.h"
 
 // Include GLEW
-#include <GL\glew.h>
+#include <GL/glew.h>
 
 // Include GLFW
-#include <GLFW\glfw3.h>
+#include <GLFW/glfw3.h>
 GLFWwindow* window;
 
 // Include GLM
@@ -25,7 +25,8 @@ using namespace glm;
 
 #include "engine.hpp"
 #include "systems/render.hpp"
-#include "systems/controls.hpp"
+#include "systems/controls.hpp"	
+#include "systems/Terrain.hpp"
 
 #include "components/player.hpp"
 #include "components/transform.hpp"
@@ -73,6 +74,7 @@ int main() {
 		tmp.orientation = toQuat(View);
 
 		e.addComponent(player, &tmp);
+		e.addSystem(new TerrainSystem());
 		e.addSystem(new ControlSystem()); // Jitters because we dont have delta time based movement, will run with variable time lengths resulting in random fast movement
 		e.addSystem(new RenderSystem());
 		window = glfwGetCurrentContext();

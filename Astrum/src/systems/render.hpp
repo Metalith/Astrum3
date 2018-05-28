@@ -18,11 +18,8 @@ class RenderSystem: public System {
 		Transform* tPlayer;
 		
 		std::vector<GLuint> vertexArrays;
-		std::vector<int> sizes;
-		std::vector<int> bSizes;
 		std::vector<int> vSizes;
 
-		int totalVerts = 0;
 		void RenderGUI();
 
 		//IMGUI Functions and variables

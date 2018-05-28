@@ -16,6 +16,8 @@ class TerrainSystem: public System {
 		void GenerateCube(int x, int y, int z, Mesh * mesh);
 		float sdf(glm::vec3 pos);
 		glm::vec3 interp(glm::vec3 vert1, glm::vec3 vert2);
+
+		void GenerateAsteroid(int x, int y, int z, Mesh * mesh); // Replace with flyweight/Command
 };
 
 #endif

@@ -14,7 +14,8 @@ using namespace glm;
 #include "common/shader.hpp"
 
 #include "components/player.hpp"
-#include "components/mesh.hpp"
+#include "components/mesh.hpp" 
+#include "components/renderable.hpp"
 
 #include "engine.hpp"
 
@@ -49,18 +50,14 @@ RenderSystem::RenderSystem() {
 
 
 	// Enable depth test
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 	// Accept fragment if it closer to the camera than the former one
-	//glDepthFunc(GL_LESS);
+	glDepthFunc(GL_LESS);
 	//glEnable(GL_CULL_FACE);
-	//    glCullFace(GL_FRONT);
-	  //glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+	//glCullFace(GL_FRONT);
+	glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
 	
 	RenderSystem::DrawGrid();
 
@@ -118,9 +115,10 @@ void RenderSystem::update() {
 	glUniformMatrix4fv(ViewID, 1, GL_FALSE, &View[0][0]);
 	glUniformMatrix4fv(ModelID, 1, GL_FALSE, &Model[0][0]);
 
-	for (int i = 0; i < vertexArrays.size(); i++) {
+	for (uint i = 0; i < vertexArrays.size(); i++) {
 		glBindVertexArray(vertexArrays[i]); // Bind our Vertex Array Object
 		glEnableVertexAttribArray(0);
+		//	glEnableVertexAttribArray(1);
 		//glDisableVertexAttribArray(2);
 		// glDrawElements(GL_TRIANGLES, sizes[i], GL_UNSIGNED_INT, (void*)0);
 		glDrawArrays(GL_TRIANGLES, 0, vSizes[i]);
@@ -161,19 +159,22 @@ void RenderSystem::addEntity(int e) {
 		(void*)0            // array buffer offset
 	);
 
-	 GLuint normalbuffer;
-	 glGenBuffers(1, &normalbuffer);
-	 glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
-	 glBufferData(GL_ARRAY_BUFFER, m->normals.size() * sizeof(GLfloat), &m->normals[0], GL_STATIC_DRAW);
-	 glEnableVertexAttribArray(1);
-	 glVertexAttribPointer(
-	 		1,                  // attribute. No particular reason for 0, but must match the layout in the shader.
-	 		3,                  // size
-	 		GL_FLOAT,           // type
-	 		GL_FALSE,           // normalized?
-	 		0,                  // stride
-	 		(void*)0            // array buffer offset
-	 		);
+	//if (m->normals.size() > 0)
+	//{
+	//	GLuint normalbuffer;
+	//	glGenBuffers(1, &normalbuffer);
+	//	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer);
+	//	glBufferData(GL_ARRAY_BUFFER, m->normals.size() * sizeof(GLfloat), &m->normals[0], GL_STATIC_DRAW);
+	//	glEnableVertexAttribArray(1);
+	//	glVertexAttribPointer(
+	//		1,                  // attribute. No particular reason for 0, but must match the layout in the shader.
+	//		3,                  // size
+	//		GL_FLOAT,           // type
+	//		GL_FALSE,           // normalized?
+	//		0,                  // stride
+	//		(void*)0            // array buffer offset
+	//	);
+	//}
 
 	/*GLuint indexbuffer;
 	glGenBuffers(1, &indexbuffer);
@@ -181,10 +182,7 @@ void RenderSystem::addEntity(int e) {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m->indices.size() * sizeof(int), &m->indices[0], GL_STATIC_DRAW);*/
 
 	vertexArrays.push_back(VertexArrayID);
-	sizes.push_back(m->indices.size());
-	bSizes.push_back(m->bounds.size() / 3);
 	vSizes.push_back(m->vertices.size() / 3);
-	totalVerts += m->vertices.size() / 3;
 
 	glBindVertexArray(0);
 	glDisableVertexAttribArray(0);
@@ -193,40 +191,29 @@ void RenderSystem::addEntity(int e) {
 
 void RenderSystem::DrawGrid()
 {
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
+	int e = engine->createEntity();
+	Mesh *r = new Mesh();
+	r->vertices = {
+		-100, 0, -100,
+		 100, 0,  100,
+		 100, 0,  100,
 
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-
-	std::vector<GLfloat> vertices = {
-		-1, 0, -1,
-		-1, 0,  1,
-		 1, 0,  1,
-
-		-1, 0, -1,
-		 1, 0,  1,
-		 1, 0, -1
+		-100, 0, -100,
+		 100, 0,  100,
+		 100, 0, -100
 	};
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(GLfloat), &vertices[0], GL_STREAM_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(
-		0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
-		3,                  // size
-		GL_FLOAT,           // type
-		GL_FALSE,           // normalized?
-		0,                  // stride
-		(void*)0            // array buffer offset
-	);
+	engine->addComponent(e, r);
+	Renderable *r2 = new Renderable();
+	r->vertices = {
+		-100, 0, -100,
+		-100, 0,  100,
+		 100, 0,  100,
 
-	vertexArrays.push_back(VertexArrayID);
-	vSizes.push_back(vertices.size() / 3);
-
-	glBindVertexArray(0);
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
+		-100, 0, -100,
+	     100, 0,  100,
+		 100, 0, -100
+	};
+	engine->addComponent(e, r2);
 }
 
 void RenderSystem::RenderGUI()

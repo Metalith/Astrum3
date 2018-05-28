@@ -19,14 +19,13 @@ class Engine {
 		void deleteEntity();
 
 		template<class T>
-    	T* getComponent(int e) {
+		T* getComponent(int e) {
 			T* tmp;
 			for (auto* c : entities[e]) {
 				if ((tmp = dynamic_cast<T*>(c)) != nullptr) {
 					return tmp;
 				}
 			}
-			int status;
 			std::cout << "Could not find component " << typeid(tmp).name() << std::endl;
 			return nullptr;
 		};

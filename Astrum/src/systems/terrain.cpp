@@ -24,7 +24,7 @@ TerrainSystem::TerrainSystem() {
 	For each cube in chunk
 	Generate each face with offset
 	*/
-	
+	//GenerateAsteroid(0, 0, 0);
 	int chunk = engine->createEntity();
 	engine->addComponent(chunk, &mesh);
 	

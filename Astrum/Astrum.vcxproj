@@ -165,6 +165,7 @@
     <ClInclude Include="src\components\component.hpp" />
     <ClInclude Include="src\components\mesh.hpp" />
     <ClInclude Include="src\components\player.hpp" />
+    <ClInclude Include="src\components\renderable.hpp" />
     <ClInclude Include="src\components\transform.hpp" />
     <ClInclude Include="src\engine.hpp" />
     <ClInclude Include="src\gui\imconfig.h" />
